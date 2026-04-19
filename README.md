@@ -1,8 +1,6 @@
-<div align="center">
+# Customer Churn Prediction System
 
-# 📊 Customer Churn Prediction System
-
-**End-to-end ML pipeline with REST API & Interactive Dashboard**
+End-to-end ML pipeline with REST API and interactive dashboard. Predicts which telecom customers are likely to churn using ML classification, with risk scores and contributing factors for each prediction.
 
 [![Python](https://img.shields.io/badge/Python-3.11+-3776AB?style=flat-square&logo=python&logoColor=white)](https://python.org)
 [![Scikit-learn](https://img.shields.io/badge/Scikit--learn-1.3+-F7931E?style=flat-square&logo=scikitlearn&logoColor=white)](https://scikit-learn.org)
@@ -11,51 +9,41 @@
 [![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?style=flat-square&logo=docker&logoColor=white)](https://docker.com)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](LICENSE)
 
-*A production-ready machine learning system that predicts customer churn for telecom companies, featuring automated feature engineering, model comparison, a REST API for real-time predictions, and an interactive Streamlit dashboard.*
+## Why
 
-[Quick Start](#-quick-start) · [API Docs](#-api-endpoints) · [Dashboard](#-dashboard) · [Architecture](#%EF%B8%8F-architecture) · [Results](#-results)
+Customer churn is expensive for telecom companies. Identifying at-risk customers before they leave lets retention teams act early instead of reacting after the fact. This project is a full ML workflow (data generation, feature engineering, model comparison, serving via API and dashboard) wrapped around that problem.
 
-</div>
-
----
-
-## 🎯 Problem Statement
-
-Customer churn costs telecom companies **$65.6 billion annually**. Identifying at-risk customers before they leave enables proactive retention strategies. This system predicts which customers are likely to churn using ML classification, providing risk scores and actionable insights.
-
----
-
-## ⚡ Quick Start
+## Quick start
 
 ```bash
 # 1. Clone the repo
-git clone https://github.com/YOUR_USERNAME/churn-predictor.git
+git clone https://github.com/Lokesh1566/churn-predictor.git
 cd churn-predictor
 
 # 2. Install dependencies
 pip install -r requirements.txt
 
-# 3. Train the model (generates data + trains + saves artifacts)
+# 3. Train the model (generates data, trains, saves artifacts)
 python src/pipeline.py
 
 # 4. Launch the API
 uvicorn api.app:app --reload --port 8000
-# → API docs at http://localhost:8000/docs
+# API docs at http://localhost:8000/docs
 
-# 5. Launch the Dashboard
+# 5. Launch the dashboard
 streamlit run streamlit_app/dashboard.py
-# → Dashboard at http://localhost:8501
+# Dashboard at http://localhost:8501
 ```
 
-**Or with Docker:**
+Or with Docker:
+
 ```bash
 docker-compose up --build
-# API → http://localhost:8000  |  Dashboard → http://localhost:8501
+# API: http://localhost:8000
+# Dashboard: http://localhost:8501
 ```
 
----
-
-## 🏗️ Architecture
+## Architecture
 
 ```
 ┌──────────────────────────────────────────────────────────┐
@@ -68,33 +56,31 @@ docker-compose up --build
 │                  ML PIPELINE (src/pipeline.py)           │
 │                                                          │
 │  ┌─────────┐  ┌──────────────┐  ┌──────────────────┐   │
-│  │  EDA &   │→│   Feature    │→│  Model Training   │   │
-│  │ Cleaning │  │ Engineering  │  │  & Evaluation     │   │
+│  │  EDA &  │→ │   Feature    │→ │  Model Training  │   │
+│  │ Cleaning│  │ Engineering  │  │  & Evaluation    │   │
 │  └─────────┘  └──────────────┘  └──────────────────┘   │
 │                                          │               │
 │                    ┌─────────────────────┘               │
-│                    ▼                                      │
+│                    ▼                                     │
 │           ┌────────────────┐                             │
-│           │  Model Artifacts│  (joblib + metadata)       │
+│           │ Model Artifacts│  (joblib + metadata)        │
 │           └────────────────┘                             │
 └────────────────────────────┬─────────────────────────────┘
                              │
-              ┌──────────────┼──────────────┐
+              ┌──────────────┴──────────────┐
               ▼                             ▼
 ┌──────────────────────┐     ┌──────────────────────────┐
-│    REST API           │     │    Streamlit Dashboard    │
-│  (FastAPI + Uvicorn)  │     │  (Interactive Analytics)  │
-│                       │     │                           │
-│  POST /predict        │     │  🔮 Single Predictions   │
-│  POST /predict/batch  │     │  📈 Data Analytics       │
-│  GET  /health         │     │  ℹ️  Model Comparison    │
-│  GET  /model/info     │     │                           │
+│    REST API          │     │    Streamlit Dashboard    │
+│  (FastAPI + Uvicorn) │     │  (Interactive Analytics)  │
+│                      │     │                           │
+│  POST /predict       │     │  Single Predictions       │
+│  POST /predict/batch │     │  Data Analytics           │
+│  GET  /health        │     │  Model Comparison         │
+│  GET  /model/info    │     │                           │
 └──────────────────────┘     └──────────────────────────┘
 ```
 
----
-
-## 📁 Project Structure
+## Project structure
 
 ```
 churn-predictor/
@@ -118,11 +104,9 @@ churn-predictor/
 └── README.md
 ```
 
----
+## ML pipeline
 
-## 🔬 ML Pipeline
-
-### Feature Engineering (5 custom features)
+### Feature engineering (5 custom features)
 
 | Feature | Description | Rationale |
 |---------|-------------|-----------|
@@ -132,7 +116,7 @@ churn-predictor/
 | `contract_risk` | Is month-to-month? (binary) | Strongest churn predictor |
 | `service_count` | Number of active services | Stickiness proxy |
 
-### Models Compared
+### Models compared
 
 | Model | Accuracy | Precision | Recall | F1 Score | ROC-AUC |
 |-------|----------|-----------|--------|----------|---------|
@@ -140,13 +124,11 @@ churn-predictor/
 | Random Forest | 0.635 | 0.455 | 0.624 | 0.520 | 0.682 |
 | Gradient Boosting | 0.658 | 0.525 | 0.341 | 0.414 | 0.677 |
 
-> **Best Model:** Logistic Regression — chosen for best F1 score and recall balance (catching more churners is critical).
+Best model: Logistic Regression. I picked it for the best F1 score and recall balance. In churn prediction, missing a churner (false negative) is worse than flagging someone who wasn't going to leave (false positive), so recall matters more than raw accuracy.
 
----
+## API endpoints
 
-## 🌐 API Endpoints
-
-### `POST /predict` — Single Prediction
+### `POST /predict` (single prediction)
 
 ```bash
 curl -X POST http://localhost:8000/predict \
@@ -167,7 +149,8 @@ curl -X POST http://localhost:8000/predict \
   }'
 ```
 
-**Response:**
+Response:
+
 ```json
 {
   "churn_prediction": 1,
@@ -183,78 +166,61 @@ curl -X POST http://localhost:8000/predict \
 }
 ```
 
-### `POST /predict/batch` — Batch Predictions
-### `GET /health` — Health Check
-### `GET /model/info` — Model Metadata & Metrics
+### Other endpoints
 
-> **Interactive docs:** http://localhost:8000/docs (Swagger UI)
+* `POST /predict/batch` for batch predictions
+* `GET /health` for health checks
+* `GET /model/info` for model metadata and metrics
 
----
+Interactive API docs (Swagger UI): http://localhost:8000/docs
 
-## 📊 Dashboard
+## Dashboard
 
-The Streamlit dashboard provides three views:
+The Streamlit dashboard has three views.
 
-**🔮 Predict** — Input customer details via sliders and dropdowns, get instant churn probability with a gauge chart and risk factor breakdown.
+**Predict.** Input customer details via sliders and dropdowns, get instant churn probability with a gauge chart and risk factor breakdown.
 
-**📈 Analytics** — Explore the training dataset with interactive charts: churn rates by contract type, internet service, payment method; distribution overlays for tenure and charges.
+**Analytics.** Explore the training dataset with interactive charts. Churn rates by contract type, internet service, payment method, and distribution overlays for tenure and charges.
 
-**ℹ️ Model Info** — Compare all trained models via a radar chart (accuracy, precision, recall, F1, AUC) and view detailed metrics.
+**Model Info.** Compare all trained models via a radar chart (accuracy, precision, recall, F1, AUC) and view detailed metrics.
 
----
-
-## 🐳 Docker
+## Docker
 
 ```bash
-# Build & run everything
+# Build and run everything
 docker-compose up --build
 
 # Or run individually
 docker build -t churn-predictor .
-docker run -p 8000:8000 churn-predictor                                    # API only
-docker run -p 8501:8501 churn-predictor streamlit run streamlit_app/dashboard.py  # Dashboard
+docker run -p 8000:8000 churn-predictor
+docker run -p 8501:8501 churn-predictor streamlit run streamlit_app/dashboard.py
 ```
 
----
-
-## 🧪 Testing
+## Testing
 
 ```bash
 python -m pytest tests/ -v
 ```
 
----
+## Tech stack
 
-## 🛠️ Tech Stack
+* **ML:** Scikit-learn, Pandas, NumPy
+* **API:** FastAPI, Uvicorn, Pydantic
+* **Dashboard:** Streamlit, Plotly
+* **DevOps:** Docker, Docker Compose
+* **Testing:** Pytest
 
-- **ML:** Scikit-learn, Pandas, NumPy
-- **API:** FastAPI, Uvicorn, Pydantic
-- **Dashboard:** Streamlit, Plotly
-- **DevOps:** Docker, Docker Compose
-- **Testing:** Pytest
-
----
-
-## 📈 Future Improvements
+## What I'd improve next
 
 - [ ] Add XGBoost and LightGBM models
 - [ ] Implement SHAP explainability
 - [ ] Add MLflow experiment tracking
 - [ ] Deploy to AWS/GCP with CI/CD
-- [ ] Connect to real telecom dataset (Kaggle)
-- [ ] Add model retraining scheduler
+- [ ] Connect to a real telecom dataset (Kaggle)
+- [ ] Add a model retraining scheduler
 - [ ] Prometheus + Grafana monitoring
 
 ---
 
-## 👤 Author
-
-**Lokesh Reddy Elluri**
-- MS Data Science, Indiana University Bloomington
-- [LinkedIn](https://linkedin.com/in/lokeshelluri) · [Portfolio](#) · [Email](mailto:redfylokesh@gmail.com)
-
----
-
-<div align="center">
-<sub>Built with ❤️ as part of an end-to-end ML portfolio project</sub>
-</div>
+**Lokesh Reddy Elluri**, MS Data Science, Indiana University Bloomington  
+[LinkedIn](https://linkedin.com/in/lokeshelluri) · [Email](mailto:redfylokesh@gmail.com)
